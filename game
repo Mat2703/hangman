@@ -1,0 +1,73 @@
+import random
+
+word_list = ["python", "java", "swift", "javascript"]
+
+won_games = 0
+lost_games = 0
+print("H A N G M A N")
+
+def MENU():
+    global won_games, lost_games
+
+    choice = input("Type \"play\" to play the game, \"results\" to show the scoreboard, and \"exit\" to quit:")
+
+    if choice == "play":
+        STARTGAME()
+    elif choice == "results":
+        print("You won: " + str(won_games) + " times")
+        print("You lost: " + str(lost_games) + " times")
+        MENU()
+    elif choice == "exit":
+        pass
+
+def STARTGAME():
+    global won_games, lost_games
+
+    word = random.choice(word_list)
+    guessed_word = ["-" for _ in word]
+
+    new_set = set()
+    chances = 8
+    while chances > 0:
+        print("".join(guessed_word))
+
+        guessed_letter = input("Input a letter:")
+
+        if guessed_letter in new_set:
+            print("You've already guessed this letter")
+            continue
+
+        if len(guessed_letter) != 1:
+            print("Please, input a single letter.")
+            continue
+
+        if not guessed_letter.isalpha() or not guessed_letter.islower():
+            print("Please, enter a lowercase letter from the English alphabet.")
+            continue
+
+        if guessed_letter in word and guessed_letter not in new_set:
+            for i, letter in enumerate(word):
+                if letter == guessed_letter:
+                    guessed_word[i] = guessed_letter
+                    new_set.add(guessed_letter)
+
+        else:
+            print("That letter doesn't appear in the word.")
+            chances -= 1
+            new_set.add(guessed_letter)
+
+        if "-" not in guessed_word:
+            print("You guessed the word " + "".join(guessed_word) + "!")
+            print("You survived!")
+            won_games += 1
+            break
+
+        if chances == 0:
+            print("\nYou lost!")
+            lost_games += 1
+            break
+
+    print("\nThanks for playing!")
+    MENU()  # After the game, return to the menu
+
+MENU()
